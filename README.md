@@ -1,3 +1,9 @@
+to run this project follow inderwritten steps
+- download or clone this project
+- open command prompt in the root directory of the project folder
+- run command "npm install"
+- after completition run command "npm run start"
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
