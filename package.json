@@ -1,5 +1,5 @@
 {
-  "name": "front-end",
+  "name": "swati-project-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,6 +14,7 @@
     "html-react-parser": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.7.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
     "sass": "^1.66.1",
@@ -25,7 +26,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "npx --yes gh-pages -d build -b gh-pages"
+    "deploy": "npx --yes gh-pages -d build -b gh-pages",
+    "lint": "eslint src"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +46,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "https://a2rp.github.io/swati-project-frontend/"
 }

@@ -1,110 +1,122 @@
-import React, { useEffect, useState } from 'react'
-import styles from "./styles.module.scss";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import parse from "html-react-parser";
+import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import Header from '../../components/header';
-import axios from 'axios';
-
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { CardMedia } from '@mui/material';
-
-import parse from 'html-react-parser';
+import Header from "../../components/header";
+import styles from "./styles.module.scss";
 
 const Search = () => {
-    const navigate = useNavigate(null);
-    const [token, setToken] = useState(window.localStorage.getItem("token") || "");
+    const navigate = useNavigate();
+    const [token] = useState(() => window.localStorage.getItem("token") || "");
+    const [searchInput, setSearchInput] = useState("");
+    const [tvData, setTvData] = useState({});
+    const [response, setResponse] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
-        if (token.length === 0) {
+        if (!token) {
             navigate("/login");
         }
-    }, [token]);
-    const [tvData, setTvData] = useState([]);
-    const [response, setResponse] = useState("");
+    }, [navigate, token]);
 
-    const [searchInput, setSearchInput] = useState("");
-    const handleSubmit = () => {
-        const title = searchInput;
+    const results = useMemo(
+        () => (Array.isArray(tvData) ? tvData : Object.values(tvData || {})),
+        [tvData],
+    );
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!searchInput.trim()) {
+            setResponse("Enter a title to search.");
+            return;
+        }
+
+        setIsLoading(true);
         setTvData({});
         setResponse("");
-        document.querySelector(".searchButton").disabled = true;
-        axios({
-            method: "post",
-            url: `http://localhost:1198/api/search?title=${title}`,
-            headers: { Authorization: token }
-        }).then(response => {
-            console.log(response.data.message);
-            setTvData(response.data.message);
-        }).catch(error => {
-            console.log(error);
-            setResponse(error.message);
-        }).finally(() => {
-            document.querySelector(".searchButton").disabled = false;
-        });
+
+        try {
+            const result = await axios.post(
+                "http://localhost:1198/api/search?title=" +
+                    encodeURIComponent(searchInput.trim()),
+                {},
+                { headers: { Authorization: token } },
+            );
+            setTvData(result.data.message || {});
+        } catch (error) {
+            setResponse(
+                error.response?.data?.message ||
+                    "Unable to connect to the search service.",
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    useEffect(() => {
-        // console.log(tvData);
-        // Object.keys(tvData).map(item => {
-        //     console.log("effect ", tvData[item].score);
-        // });
-    }, [tvData]);
-
     return (
-        <div className={styles.container}>
+        <div className={styles.page}>
             <Header />
-            <h1>Search Items</h1>
-            <div className={styles.searchSection}>
-                <input type="text" name="search" placeholder="Search" onChange={(event) => setSearchInput(searchInput => event.target.value)} value={searchInput} />
+            <main className={styles.content}>
+                <div className={styles.headingRow}>
+                    <div>
+                        <p className={styles.eyebrow}>PROTECTED SEARCH</p>
+                        <h1>Find a title.</h1>
+                        <p className={styles.description}>Search the connected catalog and review the details returned by the API.</p>
+                    </div>
+                    <div className={styles.headingIcon}><FiSearch aria-hidden="true" /></div>
+                </div>
 
-                <input type="button" value="Search" className="searchButton" onClick={handleSubmit} />
-            </div>
+                <form className={styles.searchForm} onSubmit={handleSubmit}>
+                    <label htmlFor="search-title">Title</label>
+                    <div className={styles.searchControls}>
+                        <input id="search-title" type="search" placeholder="Try a show title" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
+                        <button className="button" type="submit" disabled={isLoading}>
+                            {isLoading ? "Searching..." : "Search"}
+                        </button>
+                    </div>
+                </form>
 
-            <div style={{ marginTop: "30px" }}>
-                {tvData.length === 0 ? <>
-                    No Data Available
-                </> : <>
-                    {Object.keys(tvData).map((item, index) => (
-                        // show poster, name, summary, type, language, genres, status, and schedule.
-                        <Card key={index} sx={{ maxWidth: "300", margin: 5 }}>
-                            <CardMedia component="img" height="140" image={tvData[item].show.image ? tvData[item].show.image.medium : ""} className={styles.media} />
-                            <CardContent>
-                                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                    <b>Name:</b> {tvData[item].show.name}
-                                </Typography>
-                                <Typography variant="h5" component="div">
-                                    <b>Summary:</b> {parse(tvData[item].show.summary)}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    <b>Type:</b> {tvData[item].show.type}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    <b>Language:</b> {tvData[item].show.language}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    <b>Genre:</b> {tvData[item].show.genres.map((genre, index) => (<b key={index}>{genre} </b>))}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    <b>Status:</b> {tvData[item].show.status}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    <b>Schedule:</b> {Object.keys(tvData[item].show.schedule).map((scheduleItem, index) => (<b key={index}>
-                                        {scheduleItem} - {tvData[item].show.schedule[scheduleItem]}<br />
-                                    </b>))}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">Learn More</Button>
-                            </CardActions>
-                        </Card>
-                    ))}
-                </>}
-            </div>
+                {response && <p className="errorMessage">{response}</p>}
+
+                <div className={styles.resultsHeader}>
+                    <h2>Results</h2>
+                    <span>{results.length} found</span>
+                </div>
+
+                {isLoading && <p className="statusMessage">Loading results...</p>}
+                {!isLoading && !response && results.length === 0 && (
+                    <p className="statusMessage">No results yet. Search for a title to begin.</p>
+                )}
+
+                <div className={styles.resultsGrid}>
+                    {results.map((item, index) => {
+                        const show = item.show || item;
+                        return (
+                            <article className={styles.resultCard} key={show.id || index}>
+                                {show.image?.medium ? (
+                                    <img src={show.image.medium} alt={show.name + " poster"} />
+                                ) : (
+                                    <div className={styles.imagePlaceholder}>No image</div>
+                                )}
+                                <div className={styles.resultBody}>
+                                    <h3>{show.name || "Untitled"}</h3>
+                                    {show.summary && <div className={styles.summary}>{parse(show.summary)}</div>}
+                                    <dl>
+                                        <div><dt>Type</dt><dd>{show.type || "Not available"}</dd></div>
+                                        <div><dt>Language</dt><dd>{show.language || "Not available"}</dd></div>
+                                        <div><dt>Genre</dt><dd>{show.genres?.join(", ") || "Not available"}</dd></div>
+                                        <div><dt>Status</dt><dd>{show.status || "Not available"}</dd></div>
+                                        <div><dt>Schedule</dt><dd>{show.schedule ? Object.values(show.schedule).join(" - ") : "Not available"}</dd></div>
+                                    </dl>
+                                </div>
+                            </article>
+                        );
+                    })}
+                </div>
+            </main>
         </div>
-    )
-}
+    );
+};
 
-export default Search
+export default Search;

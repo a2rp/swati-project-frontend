@@ -1,28 +1,209 @@
-.container {
-    // border: 1px solid #f00;
-    // padding: 15px;
+.page {
+    min-height: 100%;
+}
 
-    .searchSection {
-        padding: 15px;
-        background-color: aliceblue;
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
+.content {
+    width: min(1160px, calc(100% - 40px));
+    margin: auto;
+    padding: 125px 0 80px;
+}
 
-        input[type="text"] {
-            width: 100%;
-            height: 30px;
-            padding-left: 15px;
-        }
+.headingRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
 
-        input[type="button"] {
-            width: 200px;
-        }
+.eyebrow {
+    margin: 0 0 13px;
+    color: var(--brand);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+}
+
+.headingRow h1 {
+    margin: 0;
+    font-size: clamp(38px, 5vw, 60px);
+    letter-spacing: -0.05em;
+}
+
+.description {
+    max-width: 620px;
+    margin: 13px 0 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.headingIcon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--brand);
+    background: var(--surface);
+}
+
+.searchForm {
+    margin-top: 40px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+}
+
+.searchForm label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.searchControls {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+}
+
+.searchControls input {
+    min-height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: 0;
+    color: var(--text);
+    background: rgba(7, 19, 29, 0.55);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.searchControls input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 17px rgba(121, 214, 208, 0.14);
+}
+
+.resultsHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 50px 0 18px;
+}
+
+.resultsHeader h2 {
+    margin: 0;
+    font-size: 23px;
+}
+
+.resultsHeader span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.resultsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.resultCard {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.resultCard:hover {
+    border-color: var(--brand);
+    box-shadow: 0 0 24px rgba(121, 214, 208, 0.12);
+}
+
+.resultCard > img,
+.imagePlaceholder {
+    width: 100%;
+    height: 190px;
+    display: block;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    background: var(--surface-light);
+}
+
+.resultBody {
+    padding: 18px;
+}
+
+.resultBody h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.summary {
+    max-height: 105px;
+    overflow: auto;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.resultBody dl {
+    display: grid;
+    gap: 8px;
+    margin: 18px 0 0;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.resultBody dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.resultBody dt {
+    color: var(--muted);
+}
+
+.resultBody dd {
+    margin: 0;
+    color: var(--text);
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .resultsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .content {
+        width: min(100% - 32px, 1160px);
+        padding-top: 100px;
     }
 
-    .media {
-        width: 100px;
-        float: left;
-        margin: 15px;
+    .headingIcon {
+        display: none;
+    }
+
+    .searchControls {
+        grid-template-columns: 1fr;
+    }
+
+    .searchControls .button {
+        width: 100%;
+    }
+
+    .resultsGrid {
+        grid-template-columns: 1fr;
     }
 }

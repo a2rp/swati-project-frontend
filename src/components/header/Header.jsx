@@ -1,65 +1,79 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { FiHome, FiLogIn, FiLogOut, FiMenu, FiSearch, FiX } from "react-icons/fi";
 import styles from "./styles.module.scss";
-import { NavLink, useNavigate } from "react-router-dom";
-
-// material ui
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = () => {
-    const navigate = useNavigate(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [token, setToken] = useState(() => window.localStorage.getItem("token") || "");
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const [token, setToken] = useState(window.localStorage.getItem("token") || "");
-    const handleLogout = (event) => {
-        event.preventDefault();
+    useEffect(() => {
+        setIsMenuOpen(false);
+        setToken(window.localStorage.getItem("token") || "");
+    }, [location.pathname]);
+
+    const handleLogout = () => {
         window.localStorage.clear();
-        window.location.reload();
-    }
+        setToken("");
+        setIsMenuOpen(false);
+        navigate("/login");
+    };
+
+    const navClass = ({ isActive }) =>
+        isActive ? styles.navlink + " " + styles.active : styles.navlink;
 
     return (
-        <div className={styles.headerContainer}>
-            {/* <NavLink className={styles.navlink} to="/home">Home</NavLink>
-            {token.length > 0
-                ? <>
-                    <NavLink className={styles.navlink} to="/search">Search</NavLink>
-                    <div className={styles.navlink} onClick={handleLogout}>Logout</div>
-                </>
-                : <>
-                    <NavLink className={styles.navlink} to="/login">Login</NavLink>
-                </>} */}
-            <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            <NavLink className={styles.navlink} to="/home" style={{ color: "#fff", textDecoration: "none" }}>Home</NavLink>
-                        </Typography>
-                        {token.length > 0
-                            ? <>
-                                {/* <NavLink className={styles.navlink} to="/search">Search</NavLink> */}
-                                <Button color="inherit">
-                                    <NavLink className={styles.navlink} to="/search" style={{ color: "#fff", textDecoration: "none" }}>Search</NavLink>
-                                </Button>
-                                {/* <div className={styles.navlink} onClick={handleLogout}>Logout</div> */}
-                                <Button color="inherit" onClick={handleLogout}>
-                                    Logout
-                                </Button>
-                            </>
-                            : <>
-                                {/* <NavLink className={styles.navlink} to="/login">Login</NavLink> */}
-                                <Button color="inherit">
-                                    <NavLink className={styles.navlink} to="/login" style={{ color: "#fff", textDecoration: "none" }}>Login</NavLink>
-                                </Button>
-                            </>}
-                    </Toolbar>
-                </AppBar>
-            </Box>
-        </div>
-    )
-}
+        <header className={styles.headerContainer}>
+            <div className={styles.headerInner}>
+                <NavLink className={styles.brand} to="/" aria-label="Swati frontend home">
+                    <img src={process.env.PUBLIC_URL + "/logo.png"} alt="" />
+                    <span>
+                        <strong>Swati Frontend</strong>
+                        <small>Search and account workspace</small>
+                    </span>
+                </NavLink>
+                <button
+                    type="button"
+                    className={styles.menuButton}
+                    onClick={() => setIsMenuOpen((open) => !open)}
+                    aria-expanded={isMenuOpen}
+                    aria-controls="primary-navigation"
+                    aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                >
+                    {isMenuOpen ? <FiX /> : <FiMenu />}
+                </button>
+                <nav
+                    id="primary-navigation"
+                    className={isMenuOpen ? styles.navigation + " " + styles.open : styles.navigation}
+                    aria-label="Primary navigation"
+                >
+                    <NavLink className={navClass} to="/">
+                        <FiHome aria-hidden="true" />
+                        <span>Home</span>
+                    </NavLink>
+                    {token ? (
+                        <>
+                            <NavLink className={navClass} to="/search">
+                                <FiSearch aria-hidden="true" />
+                                <span>Search</span>
+                            </NavLink>
+                            <button type="button" className={styles.navButton} onClick={handleLogout}>
+                                <FiLogOut aria-hidden="true" />
+                                <span>Logout</span>
+                            </button>
+                        </>
+                    ) : (
+                        <NavLink className={navClass} to="/login">
+                            <FiLogIn aria-hidden="true" />
+                            <span>Login</span>
+                        </NavLink>
+                    )}
+                </nav>
+            </div>
+        </header>
+    );
+};
 
-export default Header
+export default Header;
