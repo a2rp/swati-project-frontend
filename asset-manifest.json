@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/swati-project-frontend/static/css/main.d243ffe6.css",
-    "main.js": "/swati-project-frontend/static/js/main.2962c7c8.js",
+    "main.css": "/swati-project-frontend/static/css/main.c7be6d83.css",
+    "main.js": "/swati-project-frontend/static/js/main.243b87ef.js",
     "static/css/701.aa70b74f.chunk.css": "/swati-project-frontend/static/css/701.aa70b74f.chunk.css",
     "static/js/701.8a322911.chunk.js": "/swati-project-frontend/static/js/701.8a322911.chunk.js",
     "static/css/756.ac4f2625.chunk.css": "/swati-project-frontend/static/css/756.ac4f2625.chunk.css",
@@ -13,8 +13,8 @@
     "static/js/540.25397e37.chunk.js": "/swati-project-frontend/static/js/540.25397e37.chunk.js",
     "static/media/loading-gif.gif": "/swati-project-frontend/static/media/loading-gif.803f24369a085e35482e.gif",
     "index.html": "/swati-project-frontend/index.html",
-    "main.d243ffe6.css.map": "/swati-project-frontend/static/css/main.d243ffe6.css.map",
-    "main.2962c7c8.js.map": "/swati-project-frontend/static/js/main.2962c7c8.js.map",
+    "main.c7be6d83.css.map": "/swati-project-frontend/static/css/main.c7be6d83.css.map",
+    "main.243b87ef.js.map": "/swati-project-frontend/static/js/main.243b87ef.js.map",
     "701.aa70b74f.chunk.css.map": "/swati-project-frontend/static/css/701.aa70b74f.chunk.css.map",
     "701.8a322911.chunk.js.map": "/swati-project-frontend/static/js/701.8a322911.chunk.js.map",
     "756.ac4f2625.chunk.css.map": "/swati-project-frontend/static/css/756.ac4f2625.chunk.css.map",
@@ -26,7 +26,7 @@
     "540.25397e37.chunk.js.map": "/swati-project-frontend/static/js/540.25397e37.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d243ffe6.css",
-    "static/js/main.2962c7c8.js"
+    "static/css/main.c7be6d83.css",
+    "static/js/main.243b87ef.js"
   ]
 }
