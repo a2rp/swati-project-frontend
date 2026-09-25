@@ -7,10 +7,15 @@ A responsive React frontend for account access and protected title search, conne
 - Lazy-loaded Home, Login, and Search routes
 - Token-based login state stored in local storage
 - Protected search flow with API result cards
-- Responsive fixed header with mobile navigation
+- Responsive fixed header with mobile navigation and floating go-to-top control
 - Loading, validation, and API error states
 - Icon-only social and support links in the footer
 - Local logo, favicon, preview, and loading assets
+
+
+## Future improvements
+
+- Connect the frontend to a production API and expand search filters.
 
 ## Tech stack
 

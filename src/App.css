@@ -114,3 +114,42 @@ input {
     outline: 2px solid var(--brand);
     outline-offset: 3px;
 }
+.goTopButton {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 30;
+    display: none;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: #061619;
+    background: var(--brand);
+    cursor: pointer;
+    transition: border-color 160ms ease, box-shadow 160ms ease, text-shadow 160ms ease;
+}
+
+.goTopButton.isVisible {
+    display: grid;
+}
+
+.goTopButton:hover {
+    border-color: var(--brand-soft);
+    box-shadow: 0 0 20px rgba(121, 214, 208, 0.28);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+}
+
+.goTopButton svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (max-width: 520px) {
+    .goTopButton {
+        right: 16px;
+        bottom: 16px;
+    }
+}

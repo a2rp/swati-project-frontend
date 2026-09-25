@@ -1,5 +1,6 @@
+import { lazy, Suspense, useEffect, useState } from "react";
+import { FiArrowUp } from "react-icons/fi";
 import "./App.css";
-import { lazy, Suspense, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import loadingGIF from "./assets/images/loading-gif.gif";
 import Footer from "./components/Footer";
@@ -28,6 +29,19 @@ const LoadingScreen = () => (
 );
 
 function App() {
+    const [showGoTop, setShowGoTop] = useState(false);
+
+    useEffect(() => {
+        const updateGoTop = () => {
+            setShowGoTop(window.scrollY > 420);
+        };
+
+        window.addEventListener("scroll", updateGoTop, { passive: true });
+        updateGoTop();
+
+        return () => window.removeEventListener("scroll", updateGoTop);
+    }, []);
+
     return (
         <div className="App">
             <ScrollToTop />
@@ -42,6 +56,15 @@ function App() {
                 </Suspense>
             </div>
             <Footer />
+            <button
+                className={"goTopButton" + (showGoTop ? " isVisible" : "")}
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                aria-label="Go to top"
+                title="Go to top"
+            >
+                <FiArrowUp aria-hidden="true" />
+            </button>
         </div>
     );
 }
