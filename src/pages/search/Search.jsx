@@ -1,10 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import parse from "html-react-parser";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header";
+import API_BASE_URL from "../../config/api";
 import styles from "./styles.module.scss";
+
+const toPlainText = (html) => {
+    if (typeof html !== "string") {
+        return "";
+    }
+
+    const document = new DOMParser().parseFromString(html, "text/html");
+    document.querySelectorAll("script, style").forEach((element) => element.remove());
+    return document.body.textContent.replace(/\s+/g, " ").trim();
+};
 
 const Search = () => {
     const navigate = useNavigate();
@@ -38,13 +48,20 @@ const Search = () => {
 
         try {
             const result = await axios.post(
-                "http://localhost:1198/api/search?title=" +
-                    encodeURIComponent(searchInput.trim()),
+                `${API_BASE_URL}/api/search`,
                 {},
-                { headers: { Authorization: token } },
+                {
+                    params: { title: searchInput.trim() },
+                    headers: { Authorization: `Bearer ${token}` },
+                },
             );
             setTvData(result.data.message || {});
         } catch (error) {
+            if (error.response?.status === 401) {
+                window.localStorage.removeItem("token");
+                navigate("/login", { replace: true });
+                return;
+            }
             setResponse(
                 error.response?.data?.message ||
                     "Unable to connect to the search service.",
@@ -70,7 +87,7 @@ const Search = () => {
                 <form className={styles.searchForm} onSubmit={handleSubmit}>
                     <label htmlFor="search-title">Title</label>
                     <div className={styles.searchControls}>
-                        <input id="search-title" type="search" placeholder="Try a show title" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} />
+                        <input id="search-title" type="search" placeholder="Try a show title" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} maxLength={100} />
                         <button className="button" type="submit" disabled={isLoading}>
                             {isLoading ? "Searching..." : "Search"}
                         </button>
@@ -101,7 +118,7 @@ const Search = () => {
                                 )}
                                 <div className={styles.resultBody}>
                                     <h3>{show.name || "Untitled"}</h3>
-                                    {show.summary && <div className={styles.summary}>{parse(show.summary)}</div>}
+                                    {show.summary && <p className={styles.summary}>{toPlainText(show.summary)}</p>}
                                     <dl>
                                         <div><dt>Type</dt><dd>{show.type || "Not available"}</dd></div>
                                         <div><dt>Language</dt><dd>{show.language || "Not available"}</dd></div>

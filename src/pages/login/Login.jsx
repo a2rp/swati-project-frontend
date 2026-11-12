@@ -3,6 +3,7 @@ import { FiArrowRight, FiLock } from "react-icons/fi";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header";
+import API_BASE_URL from "../../config/api";
 import styles from "./styles.module.scss";
 
 const Login = () => {
@@ -26,18 +27,13 @@ const Login = () => {
     };
 
     const loginUser = async (email, password) => {
-        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+        if (!email) {
             setResponse("Enter a valid email address.");
             return;
         }
 
-        if (password.trim().length < 8 || password.trim().length > 16) {
-            setResponse("Password must contain 8 to 16 characters.");
-            return;
-        }
-
-        if (!/^[a-zA-Z0-9]+$/.test(password)) {
-            setResponse("Password must use only letters and numbers.");
+        if (!password || password.length > 256) {
+            setResponse("Enter a password of up to 256 characters.");
             return;
         }
 
@@ -45,12 +41,14 @@ const Login = () => {
         setResponse("");
 
         try {
-            const result = await axios.post("http://localhost:1198/api/login", {
+            const result = await axios.post(`${API_BASE_URL}/api/login`, {
                 email,
                 password,
             });
             const nextToken = result.data.token;
-            window.localStorage.clear();
+            if (typeof nextToken !== "string" || !nextToken) {
+                throw new Error("The login service returned an invalid token.");
+            }
             window.localStorage.setItem("token", nextToken);
             setToken(nextToken);
         } catch (error) {
@@ -65,7 +63,7 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        loginUser(inputs.email.trim(), inputs.password.trim());
+        loginUser(inputs.email.trim(), inputs.password);
     };
 
     return (
@@ -84,7 +82,7 @@ const Login = () => {
                         </label>
                         <label className={styles.field}>
                             <span>Password</span>
-                            <input type="password" name="password" placeholder="Enter your password" value={inputs.password} onChange={handleChange} autoComplete="current-password" required />
+                            <input type="password" name="password" placeholder="Enter your password" value={inputs.password} onChange={handleChange} autoComplete="current-password" maxLength={256} required />
                         </label>
                         <button className="button" type="submit" disabled={isLoading}>
                             {isLoading ? "Signing in..." : "Sign in"}

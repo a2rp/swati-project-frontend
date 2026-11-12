@@ -15,7 +15,7 @@ const Header = () => {
     }, [location.pathname]);
 
     const handleLogout = () => {
-        window.localStorage.clear();
+        window.localStorage.removeItem("token");
         setToken("");
         setIsMenuOpen(false);
         navigate("/login");
@@ -28,7 +28,7 @@ const Header = () => {
         <header className={styles.headerContainer}>
             <div className={styles.headerInner}>
                 <NavLink className={styles.brand} to="/" aria-label="Swati frontend home">
-                    <img src={process.env.PUBLIC_URL + "/logo.png"} alt="" />
+                    <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" />
                     <span>
                         <strong>Swati Frontend</strong>
                         <small>Search and account workspace</small>

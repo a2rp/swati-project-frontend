@@ -19,16 +19,18 @@ A responsive React frontend for account access and protected title search, conne
 
 ## Tech stack
 
-React, React Router, Material UI, Sass modules, Axios, and React Icons.
+React 18, React Router 7, Vite, Sass modules, Axios, and React Icons.
 
 ## Run locally
 
+Use Node.js 20.19 or newer, or Node.js 22.12 or newer.
+
 ~~~
 npm install
-npm start
+npm run dev
 ~~~
 
-The login and search screens expect the API service at http://localhost:1198.
+The login and search screens use `http://localhost:1198` by default. To connect to another API, copy `.env.example` to `.env` and set `VITE_API_BASE_URL` before starting or building the app. The API must allow the frontend origin through CORS.
 
 ## Deployment
 
@@ -38,6 +40,7 @@ Build and deploy:
 
 ~~~
 npm run lint
+npm run test
 npm run build
 npm run deploy
 ~~~

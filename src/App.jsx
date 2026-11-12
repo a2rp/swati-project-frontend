@@ -13,7 +13,7 @@ const ScrollToTop = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        if (process.env.NODE_ENV !== "test") {
+        if (import.meta.env.MODE !== "test") {
             window.scrollTo({ top: 0, left: 0, behavior: "auto" });
         }
     }, [pathname]);

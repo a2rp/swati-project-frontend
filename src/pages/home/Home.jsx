@@ -21,7 +21,7 @@ const Home = () => (
                     </div>
                 </div>
                 <div className={styles.heroPreview}>
-                    <img src={process.env.PUBLIC_URL + "/preview.png"} alt="Swati frontend preview" />
+                    <img src={`${import.meta.env.BASE_URL}preview.png`} alt="Swati frontend preview" />
                     <div className={styles.previewNote}>
                         <FiSearch aria-hidden="true" />
                         <span>Search workspace</span>
